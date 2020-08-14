@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#VARIABLES
+
+# Kubernetes namespace for CloudBees CI
+namespace=cloudbees-core
+
+#Name of the Operations Center or Master statefulset
+instanceStatefulsetName=example-master
+
+#Container with version if required, to use for the rescue pod
+rescueContainerImage=governmentpaas/awscli
+
+#Download the backup artifact
+s3Bucket=cb-ci-backups
+backupFilePath=master/backup.tar.gz

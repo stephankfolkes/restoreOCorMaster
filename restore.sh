@@ -15,40 +15,40 @@ help(){
 }
 
 while [ -n "$1" ]; do
-	case "$1" in
-	--namespace)
-    namespace="$2"
-    shift
-    ;;
-	--instanceStatefulsetName)
-		instanceStatefulsetName="$2"
-		shift
-		;;
-	--s3FilePath)
-    s3FilePath="$2"
-    shift
-    ;;
-  --backupSource)
-    backupSource="$2"
-    shift
-    ;;
-  --s3BucketName)
-    s3BucketName="$2"
-    shift
-    ;;
-  --backupFilePath)
-    backupFilePath="$2"
-    shift
-    ;;
-  --rescueContainerImage)
-    rescueContainerImage="$2"
-    shift
-    ;;
-  --cloudLocalDownloadDir)
-    cloudLocalDownloadDir="$2"
-    shift
-    ;;
-	*) echo "Option $1 not recognized" && help && exit 1 ;;
+  case "$1" in
+    --namespace)
+      namespace="$2"
+      shift
+      ;;
+    --instanceStatefulsetName)
+		  instanceStatefulsetName="$2"
+		  shift
+		  ;;
+    --s3FilePath)
+      s3FilePath="$2"
+      shift
+      ;;
+    --backupSource)
+      backupSource="$2"
+      shift
+      ;;
+    --s3BucketName)
+      s3BucketName="$2"
+      shift
+      ;;
+    --backupFilePath)
+      backupFilePath="$2"
+      shift
+      ;;
+    --rescueContainerImage)
+      rescueContainerImage="$2"
+      shift
+      ;;
+    --cloudLocalDownloadDir)
+      cloudLocalDownloadDir="$2"
+      shift
+      ;;
+    *) echo "Option $1 not recognized" && help && exit 1 ;;
 	esac
 	shift
 done

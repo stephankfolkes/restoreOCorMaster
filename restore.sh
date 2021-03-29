@@ -11,7 +11,7 @@ rescueContainerImage="governmentpaas/awscli" #Container with version if required
 cloudLocalDownloadDir="/tmp"
 
 help(){
-  echo -e "restore.sh Help\nUsage: restore.sh [parameters]\nParameters:\n--namepace <Kubernetes namespace>\n--instanceStatefulsetName <Operations Center or Controller statefulset name>\n--backupSource <local or s3>\n--backupFilePath <location of local backup file, tar.gz>\n--s3BucketName <S3 bucket name>\n--s3FilePath <Path to file in S3 bucket, tar.gz>\nOptional:\n--cloudLocalDownloadDir <Local Dir to download backup files, Default:/tmp>\n--rescueContainerImage <container image, Default:governmentpaas/awscli>"
+  echo -e "restore.sh Help\nUsage: restore.sh [parameters]\nParameters:\n--namespace <Kubernetes namespace>\n--instanceStatefulsetName <Operations Center or Controller statefulset name>\n--backupSource <local or s3>\n--backupFilePath <location of local backup file, tar.gz>\n--s3BucketName <S3 bucket name>\n--s3FilePath <Path to file in S3 bucket, tar.gz>\nOptional:\n--cloudLocalDownloadDir <Local Dir to download backup files, Default:/tmp>\n--rescueContainerImage <container image, Default:governmentpaas/awscli>"
 }
 
 while [ -n "$1" ]; do
@@ -144,5 +144,5 @@ kubectl exec --namespace=$namespace $rescuePodName -- tar -xzf /tmp/backup.tar.g
 echo "Deleting the $rescuePodName"
 kubectl --namespace=$namespace delete pod $rescuePodName
 
-echo "Scale up CJOC pods to 1 replica"
+echo "Scale up $instanceStatefulsetName pods to 1 replica"
 kubectl --namespace=$namespace scale statefulset/$instanceStatefulsetName --replicas=1

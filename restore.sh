@@ -8,12 +8,12 @@ backupSource="" #source of backups. local or s3
 s3BucketName="" #S3 bucketname containing backups.
 backupFilePath="" #Path to the tar.gz backup file on the local directory
 rescueContainerImage="governmentpaas/awscli" #Container with version if required, to use for the rescue pod.
+cloudLocalDownloadDir="/tmp"
 
 help(){
-  echo -e "restore.sh Help\nUsage: restore.sh [parameters]\nParameters:\n--namepace <Kubernetes namespace>\n--instanceStatefulsetName <Operations Center or Controller statefulset name>\n--backupSource <local or s3>\n--backupFilePath <location of local backup file, tar.gz>\n--s3BucketName <S3 bucket name>\n--s3FilePath <Path to file in S3 bucket, tar,gz>"
+  echo -e "restore.sh Help\nUsage: restore.sh [parameters]\nParameters:\n--namepace <Kubernetes namespace>\n--instanceStatefulsetName <Operations Center or Controller statefulset name>\n--backupSource <local or s3>\n--backupFilePath <location of local backup file, tar.gz>\n--s3BucketName <S3 bucket name>\n--s3FilePath <Path to file in S3 bucket, tar.gz>\nOptional:\n--cloudLocalDownloadDir <Local Dir to download backup files, Default:/tmp>\n--rescueContainerImage <container image, Default:governmentpaas/awscli>"
 }
 
-#Add validation for each parameter
 while [ -n "$1" ]; do
 	case "$1" in
 	--namespace)
@@ -44,6 +44,10 @@ while [ -n "$1" ]; do
     rescueContainerImage="$2"
     shift
     ;;
+  --cloudLocalDownloadDir)
+    cloudLocalDownloadDir="$2"
+    shift
+    ;;
 	*) echo "Option $1 not recognized" && help && exit 1 ;;
 	esac
 	shift
@@ -52,7 +56,7 @@ done
 if [ -z $namespace ] || [ -z $instanceStatefulsetName ] || [ -z $backupSource ] || [ -z $rescueContainerImage ]
 then
   echo "Execution parameters missing. Ignoring parameter inputs. Loading variables from config file."
-#  source config
+  source config
 fi
 
 if [ $backupSource = "s3" ]
@@ -106,11 +110,12 @@ spec:
           name: rescue-storage
 EOF
 
-localBackupFilePath="/tmp/backup.tar.gz" #File path where backups will be uploaded
+localBackupFilePath="$cloudLocalDownloadDir/backup.tar.gz" #Default
 case "$backupSource" in
   s3)
   echo "Downloading the backup file from S3 into local $localBackupFilePath directory"
-  aws s3 cp s3://${s3BucketName}/${backupFilePath} $localBackupFilePath
+  localBackupFilePath="$cloudLocalDownloadDir/$s3FilePath"
+  aws s3 cp s3://${s3BucketName}/${s3FilePath} $localBackupFilePath
   ;;
   local)
   [ -f $backupFilePath ] && echo "Backup file $backupFilePath exists locally." || (echo "Backup file $backupFilePath is missing. Please ensure the file can be found on local or mounted directories." && exit 1)

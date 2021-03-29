@@ -5,8 +5,8 @@
 #Kubernetes namespace for CloudBees CI
 namespace=cloudbees-core
 
-#Name of the Operations Center or Master statefulset
-instanceStatefulsetName=br-test
+#Name of the Operations Center or Controller statefulset
+instanceStatefulsetName=example-controller
 
 #Container with version if required, to use for the rescue pod
 rescueContainerImage=governmentpaas/awscli
@@ -19,4 +19,5 @@ backupFilePath=/tmp/backup.tar.gz
 
 #Download the backup artifact from AWS S3
 s3BucketName=cb-ci-backups
-s3FilePath=master/backup.tar.gz
+s3FilePath=controller/backup.tar.gz
+cloudLocalDownloadDir=/tmp

@@ -138,10 +138,11 @@ kubectl wait --namespace=$namespace --for=condition=Ready --timeout=600s pod/$re
 echo "Moving the backup file into the $rescuePodName"
 kubectl cp --namespace=$namespace $localBackupFilePath $rescuePodName:/tmp/backup.tar.gz
 
-echo "Empty $rescueStorageMountPath of all files and folders on pvc $persistentVolumeClaim"
-kubectl exec --namespace=$namespace $rescuePodName -- find $rescueStorageMountPath -type f -name "*.*" -delete || echo "Files deleted in jenkins-home"
-kubectl exec --namespace=$namespace $rescuePodName -- find $rescueStorageMountPath -type f -name "*" -delete || echo "Files deleted in jenkins-home"
-kubectl exec --namespace=$namespace $rescuePodName -- find $rescueStorageMountPath -mindepth 1 -type d -name "*" -exec rm -rf {} \; || echo "Folders deleted in jenkins-home"
+# OPTIONAL - you can empty the directories, however the uncompress will overwrite any existing files
+#echo "Empty $rescueStorageMountPath of all files and folders on pvc $persistentVolumeClaim"
+#kubectl exec --namespace=$namespace $rescuePodName -- find $rescueStorageMountPath -type f -name "*.*" -delete || echo "Files deleted in jenkins-home"
+#kubectl exec --namespace=$namespace $rescuePodName -- find $rescueStorageMountPath -type f -name "*" -delete || echo "Files deleted in jenkins-home"
+#kubectl exec --namespace=$namespace $rescuePodName -- find $rescueStorageMountPath -mindepth 1 -type d -name "*" -exec rm -rf {} \; || echo "Folders deleted in jenkins-home"
 
 echo "Uncompress the backup file into $rescueStorageMountPath"
 kubectl exec --namespace=$namespace $rescuePodName -- tar -xzf /tmp/backup.tar.gz --directory $rescueStorageMountPath

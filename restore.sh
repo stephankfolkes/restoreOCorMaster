@@ -145,7 +145,7 @@ kubectl cp --namespace=$namespace $localBackupFilePath $rescuePodName:/tmp/backu
 #kubectl exec --namespace=$namespace $rescuePodName -- find $rescueStorageMountPath -mindepth 1 -type d -name "*" -exec rm -rf {} \; || echo "Folders deleted in jenkins-home"
 
 echo "Uncompress the backup file into $rescueStorageMountPath"
-kubectl exec --namespace=$namespace $rescuePodName -- tar -xzf /tmp/backup.tar.gz --directory $rescueStorageMountPath
+kubectl exec --namespace=$namespace $rescuePodName -- tar -xvzf /tmp/backup.tar.gz --directory $rescueStorageMountPath
 
 # OPTIONAL - enable if permissions are not set correctly, securityContext in the rescuepod should set permissions appropriately
 #echo "Update ownership permissions recursively"

@@ -104,6 +104,15 @@ spec:
   containers:
     - name: rescue-container
       image: $rescueContainerImage
+      resources:
+        requests:
+          ephemeral-storage: 4Gi
+          cpu: 2000m
+          memory: 2Gi
+        limits:
+          ephemeral-storage: 4Gi
+          cpu: 2000m
+          memory: 2Gi
       command: ['sh', '-c', 'echo The app is running! && sleep 100000' ]
       volumeMounts:
         - mountPath: $rescueStorageMountPath

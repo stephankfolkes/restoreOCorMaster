@@ -15,6 +15,7 @@ do
   controllerStatefulset="$(echo $controllerAssociation | cut -d "," -f 1)"
   filePath="$(echo $controllerAssociation | cut -d "," -f 2)"
   echo "Restoring $controllerStatefulset from $backupSource backup".
+  echo "Read log for $controllerStatefulset at: $cloudLocalDownloadDir/logs/$controllerStatefulset-restore.log"
 
   if [[ $backupSource = "local" ]]; then
     bash restore.sh --namespace $namespace --instanceStatefulsetName $controllerStatefulset --backupFilePath "$filePath" --backupSource $backupSource --rescueContainerImage $rescueContainerImage > "$cloudLocalDownloadDir/logs/$controllerStatefulset-restore.log" 2>&1 &

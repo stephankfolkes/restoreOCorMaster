@@ -1,11 +1,95 @@
 #!/bin/bash
 
-namespace="cloudbees-core"
-rescueContainerImage="governmentpaas/awscli"
-backupSource="local"
-s3BucketName=cb-ci-backups
-cloudLocalDownloadDir=/tmp
-controllerList=controllerList.csv
+namespace=""
+rescueContainerImage=""
+backupSource=""
+s3BucketName=""
+cloudLocalDownloadDir=""
+controllerList=""
+BASE_DIR=""
+
+help(){
+  echo -e "restoreMany.sh Help\nUsage: restoreMany.sh [parameters]\nParameters:\n--namespace <Kubernetes namespace>\n--backupSource <local or s3>\nOptional:\n--s3BucketName <S3 bucket name>\n--cloudLocalDownloadDir <Local Dir to download backup files, Default:/tmp>\n--rescueContainerImage <container image, Default:governmentpaas/awscli>\n--controllerList <CSV file, Default:controllerList.csv>"
+}
+
+while [ -n "$1" ]; do
+  case "$1" in
+    --namespace)
+      namespace="$2"
+      shift
+      ;;
+    --backupSource)
+      backupSource="$2"
+      shift
+      ;;
+    --s3BucketName)
+      s3BucketName="$2"
+      shift
+      ;;
+    --controllerList)
+      controllerList="$2"
+      shift
+      ;;
+    --rescueContainerImage)
+      rescueContainerImage="$2"
+      shift
+      ;;
+    --cloudLocalDownloadDir)
+      cloudLocalDownloadDir="$2"
+      shift
+      ;;
+    *) echo "Option $1 not recognized" && help && exit 1 ;;
+	esac
+	shift
+done
+
+if [ -z $BASE_DIR ]
+then
+  BASE_DIR=`echo $(dirname $0)`
+fi
+
+if [ -z $namespace ] || [ -z $backupSource ]
+then
+  echo "Mandatory Execution parameters missing. Ignoring parameter inputs. Loading variables from config file."
+  source $BASE_DIR/config
+
+  if [ -z $namespace ]
+  then
+    echo "namespace not set. Stopping exection."
+    exit 1
+  fi
+fi
+
+if [ -z $backupSource ]
+then
+  echo "backupSource not set. Stopping exection."
+  exit 1
+elif [ $backupSource == 's3' ]
+then
+  if [ -z $s3BucketName ]
+  then
+    echo "s3BucketName not set. Stopping exection."
+    exit 1
+  fi
+fi
+
+if [ -z $controllerList ]
+then
+  echo "controllerList not set. Using default value $BASE_DIR/controllerList.csv"
+  controllerList=$BASE_DIR/controllerList.csv
+fi
+
+if [ -z $rescueContainerImage ]
+then
+  echo "rescueContainerImage not set. Using default value governmentpaas/awscli"
+  rescueContainerImage="governmentpaas/awscli"
+fi
+
+if [ -z $cloudLocalDownloadDir ]
+then
+  echo "cloudLocalDownloadDir not set. Using default value /tmp"
+  cloudLocalDownloadDir=/tmp
+fi
 
 #Create log directory if not exists
 mkdir -p $cloudLocalDownloadDir/logs
@@ -24,4 +108,4 @@ do
   fi
 done < $controllerList
 
-echo "Read logs and progress in $cloudLocalDownloadDir/logs"
+echo "Restore Many script complete."

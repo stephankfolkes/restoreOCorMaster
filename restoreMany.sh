@@ -50,7 +50,7 @@ fi
 
 if [ -z $namespace ] || [ -z $backupSource ]
 then
-  echo "Mandatory Execution parameters missing. Ignoring parameter inputs. Loading variables from config file."
+  echo "Mandatory Execution parameters missing. Ignoring parameter inputs. Loading variables from $BASE_DIR/config file."
   source $BASE_DIR/config
 
   if [ -z $namespace ]
@@ -64,7 +64,7 @@ if [ -z $backupSource ]
 then
   echo "backupSource not set. Stopping exection."
   exit 1
-elif [ $backupSource == 's3' ]
+elif [[ $backupSource = 's3' ]]
 then
   if [ -z $s3BucketName ]
   then
@@ -102,9 +102,9 @@ do
   echo "Read log for $controllerStatefulset at: $cloudLocalDownloadDir/logs/$controllerStatefulset-restore.log"
 
   if [[ $backupSource = "local" ]]; then
-    bash restore.sh --namespace $namespace --instanceStatefulsetName $controllerStatefulset --backupFilePath "$filePath" --backupSource $backupSource --rescueContainerImage $rescueContainerImage > "$cloudLocalDownloadDir/logs/$controllerStatefulset-restore.log" 2>&1
+    bash $BASE_DIR/restore.sh --namespace $namespace --instanceStatefulsetName $controllerStatefulset --backupFilePath "$filePath" --backupSource $backupSource --rescueContainerImage $rescueContainerImage > "$cloudLocalDownloadDir/logs/$controllerStatefulset-restore.log" 2>&1
   elif [[ $backupSource = "s3" ]]; then
-    bash restore.sh --namespace $namespace --instanceStatefulsetName $controllerStatefulset --s3FilePath "$filePath" --s3BucketName $s3BucketName --backupSource $backupSource --cloudLocalDownloadDir $cloudLocalDownloadDir --rescueContainerImage $rescueContainerImage > "$cloudLocalDownloadDir/logs/$controllerStatefulset-restore.log" 2>&1
+    bash $BASE_DIR/restore.sh --namespace $namespace --instanceStatefulsetName $controllerStatefulset --s3FilePath "$filePath" --s3BucketName $s3BucketName --backupSource $backupSource --cloudLocalDownloadDir $cloudLocalDownloadDir --rescueContainerImage $rescueContainerImage > "$cloudLocalDownloadDir/logs/$controllerStatefulset-restore.log" 2>&1
   fi
 done < $controllerList
 

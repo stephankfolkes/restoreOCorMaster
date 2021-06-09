@@ -56,7 +56,8 @@ done
 if [ -z $namespace ] || [ -z $instanceStatefulsetName ] || [ -z $backupSource ] || [ -z $rescueContainerImage ]
 then
   echo "Execution parameters missing. Ignoring parameter inputs. Loading variables from config file."
-  source config
+  BASE_DIR=`echo $(dirname $0)`
+  source $BASE_DIR/config
 fi
 
 if [ $backupSource = "s3" ]

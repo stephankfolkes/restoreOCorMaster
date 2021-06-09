@@ -14,8 +14,14 @@ It follows the process outlined in documentation: https://docs.cloudbees.com/doc
 
 ## Run
 Configure the config file and run this script using `bash restore.sh`.
-Alternatively run the script using the parameters ```bash restore.sh --namespace <namespace> --instanceStatefulsetName <Operations Center or Controller statefulset name> --backupSource <local or s3> --backupFilePath <Local backup file> --s3BucketName <S3 bucket name> --s3FilePath <Path to file in S3 bucket> --rescueContainerImage <optional docker container image> --cloudLocalDownloadDir <optional local directory to download backup files>```.
+Alternatively run the script using the parameters
+```
+bash restore.sh --namespace <namespace> --instanceStatefulsetName <Operations Center or Controller statefulset name> --backupSource <local or s3> --backupFilePath <Local backup file> --s3BucketName <S3 bucket name> --s3FilePath <Path to file in S3 bucket> --rescueContainerImage <optional docker container image> --cloudLocalDownloadDir <optional local directory to download backup files>
+```
 
 To restore more than one controller, add the list of controllers and their associated backup file paths to the `controllerList.csv` file. Controllers will be restored sequentially.
 Configure variables and run `bash restoreMany.sh`.
-Alternatively run the script using the parameters ```bash restoreMany.sh --namespace <namespace> --backupSource <local or s3> --controllerList <CSV file, Default:controllerList.csv> --s3BucketName <optional S3 bucket name> --rescueContainerImage <optional docker container image> --cloudLocalDownloadDir <optional local directory to download backup files>```.
+Alternatively run the script using the parameters
+```
+bash restoreMany.sh --namespace <namespace> --backupSource <local or s3> --controllerList <CSV file, Default:controllerList.csv> --s3BucketName <optional S3 bucket name> --rescueContainerImage <optional docker container image> --cloudLocalDownloadDir <optional local directory to download backup files>
+```
